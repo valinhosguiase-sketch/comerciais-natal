@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Natais que a TV nos contou</title>
+<style>
+:root{
+  --velvet-1:#3a0d14; --velvet-2:#1c0609; --pine:#0f2a1f;
+  --gold:#d9b25f; --gold-soft:#f0d79a; --cream:#f6efe0; --ink:#2b1d14; --muted:#7a6650;
+  --wood-1:#6b3f22; --wood-2:#3f2312; --wood-3:#8a5630;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:"Avenir Next","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#120406;overflow:hidden}
+body{font-family:var(--serif);color:var(--cream)}
+
+/* Palco fixo 1920x1080, escalado para caber em qualquer tela */
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center;overflow:hidden;
+  background:
+    radial-gradient(ellipse 70% 60% at 30% 45%, #5a1520 0%, transparent 70%),
+    radial-gradient(ellipse 80% 80% at 85% 90%, #24140a 0%, transparent 60%),
+    linear-gradient(160deg,var(--velvet-1) 0%,var(--velvet-2) 100%)}
+#bokeh,#snow{position:absolute;inset:0;pointer-events:none}
+#bokeh span{position:absolute;border-radius:50%;filter:blur(6px);opacity:.0;animation:twinkle var(--d) ease-in-out var(--delay) infinite}
+@keyframes twinkle{0%,100%{opacity:.08}50%{opacity:var(--o)}}
+.garland{position:absolute;left:0;right:0;top:0;height:70px;pointer-events:none}
+
+/* Slides */
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .7s ease,visibility .7s}
+.slide.on{opacity:1;visibility:visible}
+
+/* Abertura e encerramento */
+.cover{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.cover .kicker{font-family:var(--sans);letter-spacing:.42em;text-transform:uppercase;font-size:24px;color:var(--gold)}
+.cover h1{font-size:132px;line-height:1.02;margin:28px 0 30px;font-weight:400;color:var(--cream);text-shadow:0 4px 40px rgba(0,0,0,.6)}
+.cover h1 em{color:var(--gold-soft)}
+.cover p{font-size:38px;max-width:1200px;color:#e8d9bd;margin:0;line-height:1.4;font-style:italic}
+.cover .rule{width:180px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:36px auto}
+.cover .years{font-family:var(--sans);font-size:24px;letter-spacing:.3em;color:var(--gold)}
+
+/* Slide de comercial */
+.ad{display:grid;grid-template-columns:1060px 680px;gap:60px;padding:110px 60px 150px 60px;align-items:center}
+
+/* TV antiga */
+.tv{position:relative;width:1060px;height:780px;border-radius:46px;padding:44px;display:grid;grid-template-columns:1fr 170px;gap:34px;
+  background:
+    repeating-linear-gradient(92deg,rgba(255,255,255,.035) 0 3px,transparent 3px 11px),
+    linear-gradient(170deg,var(--wood-3),var(--wood-1) 40%,var(--wood-2));
+  box-shadow:0 50px 90px rgba(0,0,0,.65),inset 0 2px 0 rgba(255,255,255,.18),inset 0 -8px 20px rgba(0,0,0,.45)}
+.tv::after{content:"";position:absolute;left:150px;right:150px;bottom:-34px;height:34px;
+  background:linear-gradient(90deg,transparent 0 6%,var(--wood-2) 6% 12%,transparent 12% 88%,var(--wood-2) 88% 94%,transparent 94%)}
+.bezel{position:relative;border-radius:40px;padding:26px;background:linear-gradient(160deg,#2b2620,#0f0d0b);box-shadow:inset 0 6px 18px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.12)}
+.screen{position:relative;width:100%;height:100%;border-radius:38px/30px;overflow:hidden;background:#050505;cursor:pointer;
+  box-shadow:inset 0 0 70px rgba(0,0,0,.95)}
+.screen video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;opacity:0;transition:opacity .4s}
+.screen.playing video,.screen.paused video{opacity:1}
+.screen .poster{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  background:radial-gradient(circle at 50% 45%,#2a2a2a 0%,#0b0b0b 70%);transition:opacity .4s}
+.screen.playing .poster,.screen.paused .poster{opacity:0;pointer-events:none}
+.poster .play{width:120px;height:120px;border-radius:50%;border:3px solid rgba(240,215,154,.8);display:grid;place-items:center}
+.poster .play::before{content:"";margin-left:10px;border-left:40px solid var(--gold-soft);border-top:24px solid transparent;border-bottom:24px solid transparent}
+.poster .hint{font-family:var(--sans);font-size:20px;letter-spacing:.25em;text-transform:uppercase;color:#bfb29a}
+.screen .glass{position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:
+    radial-gradient(ellipse 120% 90% at 30% 15%,rgba(255,255,255,.10),transparent 45%),
+    repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px);
+  box-shadow:inset 0 0 90px rgba(0,0,0,.7)}
+.screen.flash::after{content:"";position:absolute;inset:0;background:#fff;animation:crt .45s ease-out forwards;pointer-events:none}
+@keyframes crt{0%{opacity:.9;transform:scaleY(.01)}40%{opacity:.7;transform:scaleY(1)}100%{opacity:0}}
+.side{display:flex;flex-direction:column;align-items:center;gap:30px;padding-top:20px}
+.knob{width:104px;height:104px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e7d3a5,#9a7a3f 55%,#4d3816);box-shadow:0 8px 16px rgba(0,0,0,.55),inset 0 -4px 8px rgba(0,0,0,.4);position:relative}
+.knob::after{content:"";position:absolute;left:50%;top:10px;width:6px;height:30px;margin-left:-3px;border-radius:3px;background:#3b2a10}
+.knob.k2::after{transform:rotate(55deg);transform-origin:50% 42px}
+.speaker{width:130px;flex:1;border-radius:14px;margin-bottom:6px;
+  background:repeating-linear-gradient(0deg,#2a170b 0 5px,#5a3519 5px 10px);box-shadow:inset 0 4px 10px rgba(0,0,0,.6)}
+.brandplate{font-family:var(--sans);font-size:16px;letter-spacing:.3em;color:var(--gold-soft);opacity:.8}
+.led{width:14px;height:14px;border-radius:50%;background:#3a1010;box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
+.screen.playing ~ .x, .tv.on .led{background:#ff4a3a;box-shadow:0 0 14px #ff4a3a}
+
+/* Ficha/sinopse */
+.card{position:relative;height:820px;border-radius:10px;padding:52px 56px 46px;color:var(--ink);display:flex;flex-direction:column;
+  background:
+    radial-gradient(ellipse at 20% 0%,rgba(255,255,255,.65),transparent 60%),
+    linear-gradient(180deg,#fbf5e8,#efe3c8);
+  box-shadow:0 40px 80px rgba(0,0,0,.55),0 0 0 2px rgba(217,178,95,.55),inset 0 0 0 12px #fbf5e8,inset 0 0 0 14px rgba(160,120,50,.45)}
+.card .meta{display:flex;align-items:baseline;gap:22px;border-bottom:1px solid rgba(120,90,40,.35);padding-bottom:18px}
+.card .year{font-size:96px;line-height:.85;color:#8c1c24;font-weight:400}
+.card .brand{font-family:var(--sans);font-size:22px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
+.card h2{font-size:44px;line-height:1.12;margin:22px 0 22px;font-weight:400;font-style:italic;color:#3a2516}
+.card h3{font-family:var(--sans);font-size:16px;letter-spacing:.3em;text-transform:uppercase;color:#8c1c24;margin:0 0 8px}
+.card p{font-size:25px;line-height:1.42;margin:0 0 22px}
+.card .think{margin-top:auto;padding:22px 26px;border-left:5px solid var(--gold);background:rgba(217,178,95,.18);border-radius:0 8px 8px 0}
+.card .think p{margin:0;font-style:italic;font-size:27px;color:#3a2516}
+
+/* Linha do tempo */
+#timeline{position:absolute;left:60px;right:60px;bottom:42px;height:60px;display:flex;align-items:center;justify-content:space-between;z-index:5}
+#timeline::before{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:linear-gradient(90deg,transparent,rgba(217,178,95,.55) 8%,rgba(217,178,95,.55) 92%,transparent)}
+#timeline button{position:relative;font-family:var(--sans);font-size:20px;letter-spacing:.12em;color:#c9b48a;background:#1d0709;border:2px solid rgba(217,178,95,.45);border-radius:999px;padding:8px 20px;cursor:pointer;transition:all .3s}
+#timeline button.cur{color:#1d0709;background:var(--gold);border-color:var(--gold);transform:scale(1.12)}
+#timeline button.seen{border-color:var(--gold)}
+#help{position:absolute;right:60px;top:84px;font-family:var(--sans);font-size:16px;letter-spacing:.15em;color:rgba(240,215,154,.55);z-index:5}
+.hidden-ui #help,.hidden-ui #timeline{opacity:0}
+.auto #help{opacity:0}
+.auto,.auto *{cursor:none!important}
+
+/* Botão de início na abertura */
+.start{margin-top:56px;font-family:var(--sans);font-size:28px;letter-spacing:.28em;text-transform:uppercase;color:#1d0709;background:var(--gold);border:0;border-radius:999px;padding:22px 56px;cursor:pointer;box-shadow:0 10px 40px rgba(217,178,95,.35)}
+.start:focus-visible{outline:3px solid var(--cream);outline-offset:6px}
+.auto .start{visibility:hidden}
+
+/* Contagem regressiva no encerramento */
+.countdown{margin-top:54px;display:flex;align-items:center;gap:30px;opacity:0;transition:opacity .6s}
+.countdown.on{opacity:1}
+.countdown .ring{position:relative;width:130px;height:130px}
+.countdown svg{width:130px;height:130px;transform:rotate(-90deg)}
+.countdown circle{fill:none;stroke-width:6}
+.countdown .track{stroke:rgba(217,178,95,.2)}
+.countdown .bar{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:377;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}
+.countdown .num{position:absolute;inset:0;display:grid;place-items:center;font-size:58px;color:var(--gold-soft)}
+.countdown .lbl{font-family:var(--sans);font-size:24px;letter-spacing:.3em;text-transform:uppercase;color:#c9b48a;text-align:left;line-height:1.6}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bokeh"></div>
+  <canvas id="snow" width="1920" height="1080"></canvas>
+  <svg class="garland" viewBox="0 0 1920 70" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 10 Q240 60 480 14 T960 14 T1440 14 T1920 10" fill="none" stroke="#1f3a28" stroke-width="5"/>
+  </svg>
+  <div id="slides"></div>
+  <nav id="timeline" aria-label="Linha do tempo"></nav>
+  <div id="help">← → navegar · espaço tocar/pausar · F tela cheia · H ocultar barra · Esc sair do automático</div>
+</div>
+
+<script>
+// Cada comercial: vídeo, ano, marca, título, a cena, a mensagem e uma pergunta para reflexão.
+const ADS = [
+  {video:"videos/1965-tv-excelsior.mp4", year:"1965", brand:"TV Excelsior", title:"Jingle de Natal",
+   scene:"Em preto e branco, duas crianças desenhadas atravessam a noite carregando velas. Entre elas, aparecem pinturas clássicas do nascimento de Jesus.",
+   message:"Antes das vitrines e dos presentes, o Natal era uma vela acesa e um presépio: a celebração de um nascimento simples.",
+   think:"O que, no seu Natal, ainda é vela acesa — e o que virou só enfeite?"},
+  {video:"videos/1975-bamerindus.mp4", year:"1975", brand:"Bamerindus", title:"Mãe e filho",
+   scene:"Uma mãe vestida de branco caminha por um bosque enevoado com o filho pequeno no colo. A imagem tem a textura de um sonho, de uma lembrança. O filme ficou mais de dez anos no ar.",
+   message:"O Natal celebra um nascimento e o cuidado. Toda mãe com um filho nos braços repete, de algum modo, a cena do presépio.",
+   think:"Quem segurou você no colo — e quem você segura hoje?"},
+  {video:"videos/1987-banco-nacional.mp4", year:"1987", brand:"Banco Nacional", title:"“Quero ver você não chorar”",
+   scene:"Um coral de crianças de beca vermelha canta o jingle que o banco usava desde o começo dos anos 70, enquanto um menino atravessa a cidade de bicicleta para se juntar a elas.",
+   message:"A canção não promete um mundo sem dor: pede que, se a dor vier, a gente resista e sorria. Não olhar para trás, deixar o amor vencer.",
+   think:"Do que você precisa parar de olhar para trás neste Natal?"},
+  {video:"videos/1989-tvs.mp4", year:"1989", brand:"TVS (atual SBT)", title:"A luz na janela",
+   scene:"Sem nenhuma palavra: uma casinha na neve, a luz acesa na janela, a lareira, e uma árvore que se ilumina sozinha no escuro.",
+   message:"Lar é uma luz acesa esperando alguém chegar. Às vezes o Natal não precisa ser dito, só aceso.",
+   think:"Para quem a sua janela está acesa?"},
+  {video:"videos/1993-bamerindus.mp4", year:"1993", brand:"Bamerindus", title:"O Palácio Avenida",
+   scene:"Crianças cantam nas janelas iluminadas do Palácio Avenida, em Curitiba, numa festa de Natal que o banco realizava todos os anos para a cidade.",
+   message:"A cidade para na rua para ouvir as crianças. O Natal como algo que se faz junto, em público, aberto a quem passar.",
+   think:"O que a sua cidade — ou a sua rua — ainda celebra junta?"},
+  {video:"videos/1995-coca-cola.mp4", year:"1995", brand:"Coca-Cola", title:"“O Natal vem vindo”",
+   scene:"Uma caravana de caminhões iluminados atravessa florestas e pontes na noite. Por onde passa, acende as casas; da janela do carro, um pai e um filho a veem passar.",
+   message:"A espera também é parte da festa. O Natal “vem vindo”: é uma luz que se aproxima e desperta a criança que um dia fomos.",
+   think:"O que você ainda espera com o encantamento de uma criança?"},
+  {video:"videos/2013-o-boticario.mp4", year:"2013", brand:"O Boticário", title:"O presente do filho",
+   scene:"Um menino, filho de pais separados, entrega a cada um deles um presente “mandado pelo outro”. Ao telefone, os dois descobrem o plano, riem, e decidem passar o Natal juntos.",
+   message:"A reconciliação começa com um gesto pequeno — e às vezes vem de quem menos esperamos. Família é também a que encontra um jeito de se reencontrar.",
+   think:"Quem está esperando um gesto seu para se reaproximar?"},
+  {video:"videos/2018-coca-cola.mp4", year:"2018", brand:"Coca-Cola", title:"“Regras do Natal”",
+   scene:"Os ursos polares preparam a ceia enquanto as regras aparecem na tela: todos participam, peça ajuda, não deixe apagar as tradições, lembre de quem está longe.",
+   message:"As regras do Natal são regras de convivência. A última resume todas: em família, sempre cabe mais um.",
+   think:"Quem vai ganhar uma cadeira a mais na sua mesa?"}
+];
+
+const COVER = {kicker:"Comerciais de Natal · 1965 – 2018", title:"Natais que a <em>TV</em> nos contou",
+  sub:"Não pelo produto, mas pela mensagem: o que esses filmes diziam sobre nós — e o que ainda dizem."};
+const CLOSING = {kicker:"Para levar para casa", title:"E o <em>seu</em> Natal,<br>que mensagem passa?",
+  sub:"Os comerciais passaram. As perguntas ficam."};
+
+const slidesEl = document.getElementById("slides");
+const tl = document.getElementById("timeline");
+
+function coverHTML(c, extra){
+  return `<section class="slide cover"><div class="kicker">${c.kicker}</div><h1>${c.title}</h1><div class="rule"></div><p>${c.sub}</p>${extra||""}</section>`;
+}
+slidesEl.insertAdjacentHTML("beforeend", coverHTML(COVER, `<button type="button" class="start" id="start">▶ Iniciar</button>`));
+ADS.forEach(a => slidesEl.insertAdjacentHTML("beforeend", `
+<section class="slide ad">
+  <div class="tv">
+    <div class="bezel"><div class="screen" title="Clique para tocar">
+      <video src="${a.video}" preload="metadata" playsinline></video>
+      <div class="poster"><div class="play"></div><div class="hint">${a.brand} · ${a.year}</div></div>
+      <div class="glass"></div>
+    </div></div>
+    <div class="side"><div class="knob"></div><div class="knob k2"></div><div class="led"></div><div class="speaker"></div><div class="brandplate">NATAL</div></div>
+  </div>
+  <article class="card">
+    <div class="meta"><span class="year">${a.year}</span><span class="brand">${a.brand}</span></div>
+    <h2>${a.title}</h2>
+    <h3>A cena</h3><p>${a.scene}</p>
+    <h3>A mensagem</h3><p>${a.message}</p>
+    <div class="think"><h3>Para pensar</h3><p>${a.think}</p></div>
+  </article>
+</section>`));
+slidesEl.insertAdjacentHTML("beforeend", coverHTML(CLOSING, `
+  <div class="countdown" id="countdown">
+    <div class="ring"><svg viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="60"/><circle class="bar" id="cd-bar" cx="65" cy="65" r="60"/></svg><div class="num" id="cd-num">20</div></div>
+    <div class="lbl">Recomeçando<br>em instantes</div>
+  </div>`));
+
+const slides = [...document.querySelectorAll(".slide")];
+const labels = ["Início", ...ADS.map(a => a.year), "Fim"];
+labels.forEach((l, i) => {
+  const b = document.createElement("button");
+  b.type = "button"; b.textContent = l;
+  b.addEventListener("click", () => go(i));
+  tl.appendChild(b);
+});
+
+// Modo automático: depois do primeiro play, cada comercial puxa o próximo;
+// no encerramento, 20 s de contagem e o ciclo recomeça do primeiro comercial.
+const FIRST_AD = 1, LAST = slides.length - 1;
+const COUNTDOWN_S = 20, START_DELAY_MS = 1200, NEXT_DELAY_MS = 1500;
+let cur = 0, auto = false, timer = null, tick = null;
+
+function clearTimers(){ clearTimeout(timer); clearInterval(tick); timer = tick = null; }
+function stopAll(){
+  document.querySelectorAll(".screen").forEach(s => {
+    const v = s.querySelector("video"); v.pause(); v.currentTime = 0;
+    s.classList.remove("playing","paused");
+    s.closest(".tv").classList.remove("on");
+  });
+}
+function go(i){
+  i = Math.max(0, Math.min(LAST, i));
+  clearTimers();
+  stopAll();
+  document.getElementById("countdown").classList.remove("on");
+  slides[cur].classList.remove("on");
+  cur = i;
+  slides[cur].classList.add("on");
+  [...tl.children].forEach((b, k) => { b.classList.toggle("cur", k === cur); b.classList.toggle("seen", k < cur); });
+  try { history.replaceState(null, "", "#" + cur); } catch(e) {}
+  if (!auto) return;
+  const s = slides[cur].querySelector(".screen");
+  if (s) timer = setTimeout(() => play(s), START_DELAY_MS);
+  else if (cur === LAST) countdown();
+  else timer = setTimeout(() => go(FIRST_AD), START_DELAY_MS);
+}
+function countdown(){
+  let left = COUNTDOWN_S;
+  const box = document.getElementById("countdown"), num = document.getElementById("cd-num"), bar = document.getElementById("cd-bar");
+  num.textContent = left; bar.style.transition = "none"; bar.style.strokeDashoffset = 0;
+  box.classList.add("on");
+  bar.getBoundingClientRect(); bar.style.transition = "";
+  tick = setInterval(() => {
+    left--;
+    num.textContent = Math.max(left, 0);
+    bar.style.strokeDashoffset = 377 * (1 - left / COUNTDOWN_S);
+    if (left <= 0) go(FIRST_AD);
+  }, 1000);
+}
+function play(screen){
+  const v = screen.querySelector("video"), tv = screen.closest(".tv");
+  if (!screen.classList.contains("paused")){
+    screen.classList.add("flash");
+    setTimeout(() => screen.classList.remove("flash"), 500);
+  }
+  screen.classList.add("playing"); screen.classList.remove("paused"); tv.classList.add("on");
+  // Se o navegador da TV bloquear o som automático, toca sem som para o ciclo não parar
+  v.play().catch(() => { v.muted = true; v.play(); });
+}
+function startAuto(){
+  if (auto) return;
+  auto = true;
+  document.body.classList.add("auto");
+  navigator.wakeLock?.request("screen").catch(() => {});
+}
+function toggle(screen){
+  const v = screen.querySelector("video");
+  if (v.paused){ startAuto(); play(screen); }
+  else { v.pause(); screen.classList.add("paused"); screen.classList.remove("playing"); }
+}
+document.querySelectorAll(".screen").forEach(s => {
+  s.addEventListener("click", () => toggle(s));
+  s.querySelector("video").addEventListener("ended", () => {
+    s.classList.remove("playing"); s.classList.add("paused"); s.closest(".tv").classList.remove("on");
+    if (auto) timer = setTimeout(() => go(cur + 1), NEXT_DELAY_MS);
+  });
+});
+document.getElementById("start").addEventListener("click", () => { startAuto(); go(FIRST_AD); });
+// Volta a tela de navegador a ficar acordada se ela sair e voltar ao foco
+document.addEventListener("visibilitychange", () => { if (auto && !document.hidden) navigator.wakeLock?.request("screen").catch(() => {}); });
+document.addEventListener("keydown", e => {
+  if (["ArrowRight","PageDown"].includes(e.key)) { e.preventDefault(); go(cur + 1); }
+  else if (["ArrowLeft","PageUp"].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+  else if (e.key === " " || e.key === "Enter") {
+    e.preventDefault();
+    const s = slides[cur].querySelector(".screen");
+    if (s) toggle(s);
+    else if (cur === 0) { startAuto(); go(FIRST_AD); }
+    else go(cur + 1);
+  }
+  else if (e.key === "Escape" && auto) { auto = false; document.body.classList.remove("auto"); clearTimers(); }
+  else if (e.key === "f" || e.key === "F") {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.();
+  }
+  else if (e.key === "h" || e.key === "H") document.body.classList.toggle("hidden-ui");
+  else if (e.key === "Home") go(0);
+  else if (e.key === "End") go(slides.length - 1);
+});
+
+// Escala o palco 1920x1080 para caber na janela
+const stage = document.getElementById("stage");
+function fit(){
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+addEventListener("resize", fit); fit();
+
+// Luzes desfocadas ao fundo
+const bokeh = document.getElementById("bokeh");
+const tones = ["#f0d79a","#ffb36b","#ff6b5a","#9fe0b0","#fff2cf"];
+for (let i = 0; i < 34; i++){
+  const s = document.createElement("span"), r = 14 + Math.random() * 46;
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${r}px;height:${r}px;background:${tones[i % tones.length]};--o:${(.12+Math.random()*.28).toFixed(2)};--d:${(5+Math.random()*7).toFixed(1)}s;--delay:${(-Math.random()*10).toFixed(1)}s`;
+  bokeh.appendChild(s);
+}
+// Lampadinhas na guirlanda
+const garland = document.querySelector(".garland");
+for (let x = 30; x < 1920; x += 64){
+  const t = x / 480, y = 12 + 34 * Math.abs(Math.sin(Math.PI * t));
+  garland.insertAdjacentHTML("beforeend", `<circle cx="${x}" cy="${y + 8}" r="7" fill="${tones[(x/64|0) % tones.length]}" opacity=".9"><animate attributeName="opacity" values=".35;1;.35" dur="${2 + (x % 5) * .4}s" repeatCount="indefinite"/></circle>`);
+}
+
+// Neve suave
+const cv = document.getElementById("snow"), ctx = cv.getContext("2d");
+const flakes = Array.from({length: 120}, () => ({x: Math.random()*1920, y: Math.random()*1080, r: .8 + Math.random()*2.6, v: .3 + Math.random()*.9, w: Math.random()*Math.PI*2}));
+(function tick(){
+  ctx.clearRect(0, 0, 1920, 1080);
+  ctx.fillStyle = "rgba(255,248,235,.75)";
+  for (const f of flakes){
+    f.y += f.v; f.w += .01; f.x += Math.sin(f.w) * .4;
+    if (f.y > 1090){ f.y = -10; f.x = Math.random() * 1920; }
+    ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2); ctx.fill();
+  }
+  requestAnimationFrame(tick);
+})();
+
+go(parseInt(location.hash.slice(1)) || 0);
+</script>
+</body>
+</html>
