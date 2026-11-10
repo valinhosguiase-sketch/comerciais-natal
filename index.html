@@ -274,9 +274,9 @@ labels.forEach((l, i) => {
 // Modo automático: depois do primeiro play, cada comercial puxa o próximo;
 // no encerramento, 20 s de contagem e o ciclo recomeça do primeiro comercial.
 const FIRST_AD = 1, LAST = slides.length - 1;
-const COUNTDOWN_S = 20, START_DELAY_MS = 1200, NEXT_DELAY_MS = 1500;
-// Pausa "Para pensar": em teste só nos dois primeiros comerciais (slides 1 e 2)
-const THINK_S = 10, THINK_SLIDES = new Set([1, 2]);
+const COUNTDOWN_S = 20, START_DELAY_MS = 1200;
+// Pausa "Para pensar" em tela cheia depois de cada comercial
+const THINK_S = 10;
 const reflectEl = document.getElementById("reflect");
 let cur = 0, auto = false, timer = null, tick = null;
 
@@ -354,8 +354,7 @@ document.querySelectorAll(".screen").forEach(s => {
   s.addEventListener("click", () => toggle(s));
   s.querySelector("video").addEventListener("ended", () => {
     s.classList.remove("playing"); s.classList.add("paused"); s.closest(".tv").classList.remove("on");
-    if (THINK_SLIDES.has(cur)) timer = setTimeout(reflect, 900);
-    else if (auto) timer = setTimeout(() => go(cur + 1), NEXT_DELAY_MS);
+    timer = setTimeout(reflect, 900);
   });
 });
 reflectEl.addEventListener("click", () => go(cur + 1));
