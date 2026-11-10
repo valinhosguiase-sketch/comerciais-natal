@@ -90,9 +90,10 @@ body{font-family:var(--serif);color:var(--cream)}
 .card .brand{font-family:var(--sans);font-size:22px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
 .card h2{font-size:44px;line-height:1.12;margin:22px 0 22px;font-weight:400;font-style:italic;color:#3a2516}
 .card h3{font-family:var(--sans);font-size:16px;letter-spacing:.3em;text-transform:uppercase;color:#8c1c24;margin:0 0 8px}
-.card p{font-size:25px;line-height:1.42;margin:0 0 22px}
-.card .think{margin-top:auto;padding:22px 26px;border-left:5px solid var(--gold);background:rgba(217,178,95,.18);border-radius:0 8px 8px 0}
-.card .think p{margin:0;font-style:italic;font-size:27px;color:#3a2516}
+.card p{font-size:30px;line-height:1.45;margin:0 0 22px}
+.card .think{margin-top:auto;padding:36px 40px 40px;border-left:8px solid var(--gold);background:linear-gradient(135deg,rgba(217,178,95,.30),rgba(217,178,95,.14));border-radius:0 12px 12px 0;box-shadow:inset 0 0 0 1px rgba(160,120,50,.25)}
+.card .think h3{font-size:20px;margin-bottom:16px}
+.card .think p{margin:0;font-style:italic;font-size:40px;line-height:1.3;color:#5a1218}
 
 /* Linha do tempo */
 #timeline{position:absolute;left:60px;right:60px;bottom:42px;height:60px;display:flex;align-items:center;justify-content:space-between;z-index:5}
@@ -236,7 +237,6 @@ ADS.forEach(a => slidesEl.insertAdjacentHTML("beforeend", `
   <article class="card">
     <div class="meta"><span class="year">${a.year}</span><span class="brand">${a.brand}</span></div>
     <h2>${a.title}</h2>
-    <h3>A cena</h3><p>${a.scene}</p>
     <h3>A mensagem</h3><p>${a.message}</p>
     <div class="think"><h3>Para pensar</h3><p>${a.think}</p></div>
   </article>
