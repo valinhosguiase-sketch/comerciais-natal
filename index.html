@@ -91,6 +91,10 @@ body{font-family:var(--serif);color:var(--cream)}
 .card h2{font-size:44px;line-height:1.12;margin:22px 0 22px;font-weight:400;font-style:italic;color:#3a2516}
 .card h3{font-family:var(--sans);font-size:16px;letter-spacing:.3em;text-transform:uppercase;color:#8c1c24;margin:0 0 8px}
 .card p{font-size:30px;line-height:1.45;margin:0 0 22px}
+.card .natal{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-bottom:40px}
+.card .natal-k{font-family:var(--sans);font-size:30px;letter-spacing:.42em;text-transform:uppercase;color:var(--muted);margin-bottom:34px}
+.card .natal-w{font-size:112px;line-height:1.05;font-style:italic;color:#8c1c24}
+.card .natal-r{width:160px;height:3px;margin-top:44px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .card .think{margin-top:auto;padding:36px 40px 40px;border-left:8px solid var(--gold);background:linear-gradient(135deg,rgba(217,178,95,.30),rgba(217,178,95,.14));border-radius:0 12px 12px 0;box-shadow:inset 0 0 0 1px rgba(160,120,50,.25)}
 .card .think h3{font-size:20px;margin-bottom:16px}
 .card .think p{margin:0;font-style:italic;font-size:40px;line-height:1.3;color:#5a1218}
@@ -153,61 +157,57 @@ body:not(.auto) #reflect .r-prog{display:none}
 <script>
 // Cada comercial: vídeo, ano, marca, título, a cena, a mensagem e uma pergunta para reflexão.
 const ADS = [
-  {video:"videos/1960-varig.mp4", year:"1960", brand:"VARIG", title:"“Estrela brasileira”",
+  {video:"videos/1960-varig.mp4", year:"1960", natal:"Amor", brand:"VARIG", title:"“Estrela brasileira”",
    scene:"Sem atores: só uma pauta musical que dança na tela e uma estrela que acompanha a letra do jingle. No fim, um avião cruza o céu.",
    message:"A letra junta o sagrado e o lúdico — Jesus que nasce e Papai Noel “voando a jato” — numa mensagem de amor e paz que ilumina “de norte a sul”. Virou um dos jingles mais lembrados da TV brasileira.",
    think:"Que mensagem de amor e paz você quer levar de norte a sul neste Natal?"},
-  {video:"videos/1965-tv-excelsior.mp4", year:"1965", brand:"TV Excelsior", title:"Jingle de Natal",
+  {video:"videos/1965-tv-excelsior.mp4", year:"1965", natal:"Ternura", brand:"TV Excelsior", title:"Jingle de Natal",
    scene:"Em preto e branco, duas crianças desenhadas atravessam a noite carregando velas. Entre elas, aparecem pinturas clássicas do nascimento de Jesus.",
    message:"Antes das vitrines e dos presentes, o Natal era uma vela acesa e um presépio: a celebração de um nascimento simples.",
    think:"O que, no seu Natal, ainda é vela acesa — e o que virou só enfeite?"},
-  {video:"videos/1967-pernambucanas.mp4", year:"1967", brand:"Pernambucanas", title:"“Dezembro vem o Natal”",
+  {video:"videos/1967-pernambucanas.mp4", year:"1967", natal:"Presente", brand:"Pernambucanas", title:"“Dezembro vem o Natal”",
    scene:"Em desenho, Papai Noel desce pela chaminé e deixa presentes para as crianças que dormem. Depois, uma família de verdade troca presentes e abraços em volta da árvore.",
    message:"O jingle fala em “lembranças mais humanas”: o presente vale como sinal de que alguém pensou em nós. Foi um dos primeiros grandes sucessos da propaganda brasileira.",
    think:"Qual presente mais disse a você: “eu lembrei de você”?"},
-  {video:"videos/1969-cica.mp4", year:"1969", brand:"Cica", title:"“Sinos de Belém”",
+  {video:"videos/1969-cica.mp4", year:"1969", natal:"Pureza", brand:"Cica", title:"“Sinos de Belém”",
    scene:"A Turma da Mônica canta num coral, até o Cebolinha derrubar as latas que escondia. A Mônica dá uma bronca, ele fica “ouvindo sinos”, e o Jotalhão surge num presente.",
    message:"No meio da bagunça, a canção segue: “já nasceu Deus Menino, para o nosso bem”. O Natal não pede perfeição: nele cabem o riso, o erro e a criança que apronta.",
    think:"Ainda há espaço para a leveza e o riso no seu Natal?"},
-  {video:"videos/1975-bamerindus.mp4", year:"1975", brand:"Bamerindus", title:"Mãe e filho",
+  {video:"videos/1975-bamerindus.mp4", year:"1975", natal:"Nascimento", brand:"Bamerindus", title:"Mãe e filho",
    scene:"Uma mãe vestida de branco caminha por um bosque enevoado com o filho pequeno no colo. A imagem tem a textura de um sonho, de uma lembrança. O filme ficou mais de dez anos no ar.",
    message:"O Natal celebra um nascimento e o cuidado. Toda mãe com um filho nos braços repete, de algum modo, a cena do presépio.",
    think:"Quem segurou você no colo — e quem você segura hoje?"},
-  {video:"videos/1978-itau.mp4", year:"1978", brand:"Itaú", title:"“Sinos”",
+  {video:"videos/1978-itau.mp4", year:"1978", natal:"O Ano Todo", brand:"Itaú", title:"“Sinos”",
    scene:"À noite, num mosteiro de pedra, monges franciscanos puxam juntos as cordas dos grandes sinos, que badalam no escuro. No fim, uma frase aparece na tela.",
    message:"“Que o espírito de Natal permaneça em você todos os dias do Ano Novo.” O Natal não como uma data, mas como algo que se leva pelo ano inteiro.",
    think:"O que do seu Natal você quer que dure até o próximo dezembro?"},
-  {video:"videos/1987-banco-nacional.mp4", year:"1987", brand:"Banco Nacional", title:"“Quero ver você não chorar”",
+  {video:"videos/1987-banco-nacional.mp4", year:"1987", natal:"Participar", brand:"Banco Nacional", title:"“Quero ver você não chorar”",
    scene:"Um coral de crianças de beca vermelha canta o jingle que o banco usava desde o começo dos anos 70, enquanto um menino atravessa a cidade de bicicleta para se juntar a elas.",
    message:"A canção não promete um mundo sem dor: pede que, se a dor vier, a gente resista e sorria. Não olhar para trás, deixar o amor vencer.",
    think:"Do que você precisa parar de olhar para trás neste Natal?"},
-  {video:"videos/1989-tvs.mp4", year:"1989", brand:"TVS (atual SBT)", title:"A luz na janela",
+  {video:"videos/1989-tvs.mp4", year:"1989", natal:"Luz", brand:"TVS (atual SBT)", title:"A luz na janela",
    scene:"Sem nenhuma palavra: uma casinha na neve, a luz acesa na janela, a lareira, e uma árvore que se ilumina sozinha no escuro.",
    message:"Lar é uma luz acesa esperando alguém chegar. Às vezes o Natal não precisa ser dito, só aceso.",
    think:"Para quem a sua janela está acesa?"},
-  {video:"videos/1993-bamerindus.mp4", year:"1993", brand:"Bamerindus", title:"O Palácio Avenida",
+  {video:"videos/1993-bamerindus.mp4", year:"1993", natal:"Junção", brand:"Bamerindus", title:"O Palácio Avenida",
    scene:"Crianças cantam nas janelas iluminadas do Palácio Avenida, em Curitiba, numa festa de Natal que o banco realizava todos os anos para a cidade.",
    message:"A cidade para na rua para ouvir as crianças. O Natal como algo que se faz junto, em público, aberto a quem passar.",
    think:"O que a sua cidade — ou a sua rua — ainda celebra junta?"},
-  {video:"videos/1995-coca-cola.mp4", year:"1995", brand:"Coca-Cola", title:"“O Natal vem vindo”",
+  {video:"videos/1995-coca-cola.mp4", year:"1995", natal:"Magia", brand:"Coca-Cola", title:"“O Natal vem vindo”",
    scene:"Uma caravana de caminhões iluminados atravessa florestas e pontes na noite. Por onde passa, acende as casas; da janela do carro, um pai e um filho a veem passar.",
    message:"A espera também é parte da festa. O Natal “vem vindo”: é uma luz que se aproxima e desperta a criança que um dia fomos.",
    think:"O que você ainda espera com o encantamento de uma criança?"},
-  {video:"videos/2013-o-boticario.mp4", year:"2013", brand:"O Boticário", title:"O presente do filho",
+  {video:"videos/2013-o-boticario.mp4", year:"2013", natal:"Reencontro", brand:"O Boticário", title:"O presente do filho",
    scene:"Um menino, filho de pais separados, entrega a cada um deles um presente “mandado pelo outro”. Ao telefone, os dois descobrem o plano, riem, e decidem passar o Natal juntos.",
    message:"A reconciliação começa com um gesto pequeno — e às vezes vem de quem menos esperamos. Família é também a que encontra um jeito de se reencontrar.",
    think:"Quem está esperando um gesto seu para se reaproximar?"},
-  {video:"videos/2018-bradesco.mp4", year:"2018", brand:"Bradesco", title:"O Vagalume",
+  {video:"videos/2018-bradesco.mp4", year:"2018", natal:"União", brand:"Bradesco", title:"O Vagalume",
    scene:"Um vagalume sai do campo atrás de um sonho na cidade grande, onde ninguém parece notá-lo. No fim, sua luz se junta à de muitos outros e acende uma árvore inteira.",
    message:"Cada um tem o seu brilho, por menor que pareça. Sozinhos, piscamos; juntos, iluminamos.",
-   think:"Onde a sua luz faria diferença se somada à de alguém?"},
-  {video:"videos/2023-natura.mp4", year:"2023", brand:"Natura", title:"A intenção do coração",
-   scene:"Em stop-motion, um bonequinho sai de um relógio cuco e atravessa o mundo carregando um presente para a menina que ama.",
-   message:"Um presente é a intenção que vem do coração. E se transformássemos em presente todo o amor que sentimos?",
-   think:"Que amor você ainda não transformou em presente?"}
+   think:"Onde a sua luz faria diferença se somada à de alguém?"}
 ];
 
-const COVER = {kicker:"Comerciais de Natal · 1960 – 2023", title:"Natais que a <em>TV</em> nos contou",
+const COVER = {kicker:"Comerciais de Natal · 1960 – 2018", title:"Natais que a <em>TV</em> nos contou",
   sub:"Não pelo produto, mas pela mensagem: o que esses filmes diziam sobre nós — e o que ainda dizem."};
 const CLOSING = {kicker:"Para levar para casa", title:"E o <em>seu</em> Natal,<br>que mensagem passa?",
   sub:"Os comerciais passaram. As perguntas ficam."};
@@ -230,10 +230,8 @@ ADS.forEach(a => slidesEl.insertAdjacentHTML("beforeend", `
     <div class="side"><div class="knob"></div><div class="knob k2"></div><div class="led"></div><div class="speaker"></div><div class="brandplate">NATAL</div></div>
   </div>
   <article class="card">
-    <div class="meta"><span class="year">${a.year}</span><span class="brand">${a.brand}</span></div>
-    <h2>${a.title}</h2>
-    <h3>A mensagem</h3><p>${a.message}</p>
-    <div class="think"><h3>Para pensar</h3><p>${a.think}</p></div>
+    <div class="meta"><span class="year">${a.year}</span></div>
+    <div class="natal"><span class="natal-k">O Natal é</span><span class="natal-w">${a.natal}</span><span class="natal-r"></span></div>
   </article>
 </section>`));
 slidesEl.insertAdjacentHTML("beforeend", coverHTML(CLOSING, `
