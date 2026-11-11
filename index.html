@@ -41,7 +41,9 @@ body{font-family:var(--serif);color:var(--cream)}
 .cover .years{font-family:var(--sans);font-size:24px;letter-spacing:.3em;color:var(--gold)}
 
 /* Slide de comercial */
-.ad{display:grid;grid-template-columns:1060px 680px;gap:60px;padding:110px 60px 150px 60px;align-items:center}
+.ad{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0 120px}
+.ad .tv{transform:scale(.9);margin:-39px 0}
+.ad-year{font-size:96px;line-height:1;color:var(--gold-soft);letter-spacing:.06em;margin-bottom:22px;text-shadow:0 4px 24px rgba(0,0,0,.45)}
 
 /* TV antiga */
 .tv{position:relative;width:1060px;height:780px;border-radius:46px;padding:44px;display:grid;grid-template-columns:1fr 170px;gap:34px;
@@ -104,9 +106,9 @@ body{font-family:var(--serif);color:var(--cream)}
 #reflect{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 240px;
   background:radial-gradient(ellipse at center,rgba(52,10,16,.95) 0%,rgba(14,3,5,.985) 75%);opacity:0;visibility:hidden;transition:opacity 1s ease,visibility 1s;cursor:pointer}
 #reflect.on{opacity:1;visibility:visible}
-#reflect .r-kicker{font-family:var(--sans);font-size:26px;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity 1s .3s}
+#reflect .r-kicker{font-family:var(--sans);font-size:34px;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity 1s .3s}
 #reflect .rule{width:180px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:34px auto 44px;transform:scaleX(0);transition:transform 1.2s .5s}
-#reflect .r-q{font-size:78px;line-height:1.25;font-style:italic;color:var(--cream);margin:0;text-shadow:0 4px 30px rgba(0,0,0,.5)}
+#reflect .r-q{font-size:170px;line-height:1.1;font-style:italic;color:var(--cream);margin:0;text-shadow:0 4px 30px rgba(0,0,0,.5)}
 #reflect .w{display:inline-block;opacity:0;filter:blur(8px);transform:translateY(14px);transition:opacity .9s ease,filter .9s ease,transform .9s ease}
 #reflect .r-prog{position:absolute;left:50%;bottom:150px;width:520px;margin-left:-260px;height:3px;background:rgba(217,178,95,.18);border-radius:3px;overflow:hidden;opacity:0;transition:opacity 1s}
 #reflect .r-prog i{display:block;height:100%;background:var(--gold);transform:scaleX(0);transform-origin:left}
@@ -119,7 +121,7 @@ body:not(.auto) #reflect .r-prog{display:none}
 #timeline button{position:relative;font-family:var(--sans);font-size:16px;letter-spacing:.04em;color:#c9b48a;background:#1d0709;border:2px solid rgba(217,178,95,.45);border-radius:999px;padding:5px 9px;cursor:pointer;transition:all .3s}
 #timeline button.cur{color:#1d0709;background:var(--gold);border-color:var(--gold);transform:scale(1.12)}
 #timeline button.seen{border-color:var(--gold)}
-#help{position:absolute;right:60px;top:84px;font-family:var(--sans);font-size:16px;letter-spacing:.15em;color:rgba(240,215,154,.55);z-index:5}
+#help{position:absolute;left:0;right:0;text-align:center;bottom:112px;font-family:var(--sans);font-size:16px;letter-spacing:.15em;color:rgba(240,215,154,.55);z-index:5}
 .hidden-ui #help,.hidden-ui #timeline{opacity:0}
 .auto #help{opacity:0}
 .auto,.auto *{cursor:none!important}
@@ -149,7 +151,7 @@ body:not(.auto) #reflect .r-prog{display:none}
     <path d="M0 10 Q240 60 480 14 T960 14 T1440 14 T1920 10" fill="none" stroke="#1f3a28" stroke-width="5"/>
   </svg>
   <div id="slides"></div>
-  <div id="reflect" aria-live="polite"><div class="r-kicker">Para pensar</div><div class="rule"></div><p class="r-q" id="r-q"></p><div class="r-prog"><i id="r-bar"></i></div></div>
+  <div id="reflect" aria-live="polite"><div class="r-kicker">O Natal é</div><div class="rule"></div><p class="r-q" id="r-q"></p><div class="r-prog"><i id="r-bar"></i></div></div>
   <nav id="timeline" aria-label="Linha do tempo"></nav>
   <div id="help">← → navegar · espaço tocar/pausar · F tela cheia · H ocultar barra · Esc sair do automático</div>
 </div>
@@ -221,6 +223,7 @@ function coverHTML(c, extra){
 slidesEl.insertAdjacentHTML("beforeend", coverHTML(COVER, `<button type="button" class="start" id="start">▶ Iniciar</button>`));
 ADS.forEach(a => slidesEl.insertAdjacentHTML("beforeend", `
 <section class="slide ad">
+  <div class="ad-year">${a.year}</div>
   <div class="tv">
     <div class="bezel"><div class="screen" title="Clique para tocar">
       <video src="${a.video}" preload="metadata" playsinline></video>
@@ -229,10 +232,6 @@ ADS.forEach(a => slidesEl.insertAdjacentHTML("beforeend", `
     </div></div>
     <div class="side"><div class="knob"></div><div class="knob k2"></div><div class="led"></div><div class="speaker"></div><div class="brandplate">NATAL</div></div>
   </div>
-  <article class="card">
-    <div class="meta"><span class="year">${a.year}</span></div>
-    <div class="natal"><span class="natal-k">O Natal é</span><span class="natal-w">${a.natal}</span><span class="natal-r"></span></div>
-  </article>
 </section>`));
 slidesEl.insertAdjacentHTML("beforeend", coverHTML(CLOSING, `
   <div class="countdown" id="countdown">
@@ -298,7 +297,7 @@ function countdown(){
 }
 function reflect(){
   const a = ADS[cur - FIRST_AD];
-  const words = a.think.split(" ");
+  const words = a.natal.split(" ");
   document.getElementById("r-q").innerHTML = words.map((w, k) => `<span class="w" style="transition-delay:${(1 + k * .22).toFixed(2)}s">${w}</span>`).join(" ");
   const bar = document.getElementById("r-bar");
   bar.style.transition = "none"; bar.style.transform = "scaleX(0)";
