@@ -131,6 +131,27 @@ body:not(.auto) #reflect .r-prog{display:none}
 .start:focus-visible{outline:3px solid var(--cream);outline-offset:6px}
 .auto .start{visibility:hidden}
 
+/* Escolha da versão na capa */
+.choices{margin-top:52px;display:flex;gap:28px;justify-content:center}
+.choices .start{margin-top:0;width:440px;padding:22px 26px 20px;border-radius:22px;display:flex;flex-direction:column;align-items:center;gap:8px;letter-spacing:.2em;font-size:24px}
+.choices .start small{font-family:var(--serif);font-size:24px;letter-spacing:0;text-transform:none;font-style:italic;opacity:.85}
+.choices .start.alt{background:rgba(29,7,9,.55);color:var(--gold-soft);box-shadow:inset 0 0 0 2px var(--gold),0 10px 40px rgba(0,0,0,.3)}
+.auto .choices{visibility:hidden}
+
+/* Finais alternativos */
+.closing .fin{display:none;flex-direction:column;align-items:center}
+.closing[data-v="0"] .fin0,.closing[data-v="1"] .fin1,.closing[data-v="2"] .fin2{display:flex}
+.closing .fin-text{font-size:52px;line-height:1.55;max-width:1580px;color:#eadcc2;font-style:normal;margin:0}
+.closing .fin-text .kw{font-style:italic;color:var(--gold-soft);font-size:1.14em;text-shadow:0 0 28px rgba(240,215,154,.35)}
+.closing .fin-quote{font-size:66px;line-height:1.4;max-width:1500px;font-style:italic;color:var(--cream);margin:0}
+.closing .fin-quote .kw{color:var(--gold-soft);text-shadow:0 0 28px rgba(240,215,154,.35)}
+.closing .fin-sign{margin-top:46px;font-family:var(--sans);font-size:26px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+.closing .fin-sign span{display:block;margin-top:10px;font-size:20px;letter-spacing:.2em;color:#c9b48a}
+.closing .fw{display:inline-block;opacity:0;filter:blur(6px);transform:translateY(10px);transition:opacity .9s ease,filter .9s ease,transform .9s ease}
+.closing .fin.show .fw{opacity:1;filter:none;transform:none}
+.closing .fade{opacity:0;transition:opacity 1.2s ease}
+.closing .fin.show .fade{opacity:1}
+
 /* Contagem regressiva no encerramento */
 .countdown{margin-top:54px;display:flex;align-items:center;gap:30px;opacity:0;transition:opacity .6s}
 .countdown.on{opacity:1}
@@ -213,6 +234,11 @@ const COVER = {kicker:"Comerciais de Natal · 1960 – 2018", title:"Natais que 
   sub:"Não pelo produto, mas pela mensagem: o que esses filmes diziam sobre nós — e o que ainda dizem."};
 const CLOSING = {kicker:"Para levar para casa", title:"E o <em>seu</em> Natal,<br>que mensagem passa?",
   sub:"Os comerciais passaram. As perguntas ficam."};
+// Final 1 (proposta do Lívio): *palavra* = destaque
+const FINAL1 = "*Natal*: o *Amor* incondicional a tudo e todos, resgatado por Francesco com a *Ternura* *Presente* na *Pureza* do *Nascimento* Daquele que participa de nossas vidas o *Ano Todo*, trazendo *Luz* à *Junção* *Mágica* do nosso *Reencontro*, elevando-nos à *União* com Algo muito maior do que percebemos com nossos cinco sentidos.";
+// Final 2 (circular do Dr. Celso Charuri)
+const FINAL2 = "“… Hoje estamos dentro do barulho social, político e tecnológico, mas em nossas mentes continua brilhando *aquele foco* ao qual fomos sempre fiéis…”";
+const FINAL_S = [20, 40, 25];   // segundos de cada tela final
 
 const slidesEl = document.getElementById("slides");
 const tl = document.getElementById("timeline");
@@ -220,7 +246,11 @@ const tl = document.getElementById("timeline");
 function coverHTML(c, extra){
   return `<section class="slide cover"><div class="kicker">${c.kicker}</div><h1>${c.title}</h1><div class="rule"></div><p>${c.sub}</p>${extra||""}</section>`;
 }
-slidesEl.insertAdjacentHTML("beforeend", coverHTML(COVER, `<button type="button" class="start" id="start">▶ Iniciar</button>`));
+slidesEl.insertAdjacentHTML("beforeend", coverHTML(COVER, `<div class="choices">
+  <button type="button" class="start" data-final="0">▶ Versão atual<small>E o seu Natal?</small></button>
+  <button type="button" class="start alt" data-final="1">▶ Final 1<small>O Natal de Francesco</small></button>
+  <button type="button" class="start alt" data-final="2">▶ Final 2<small>Dr. Celso Charuri</small></button>
+</div>`));
 ADS.forEach(a => slidesEl.insertAdjacentHTML("beforeend", `
 <section class="slide ad">
   <div class="ad-year">${a.year}</div>
@@ -233,11 +263,24 @@ ADS.forEach(a => slidesEl.insertAdjacentHTML("beforeend", `
     <div class="side"><div class="knob"></div><div class="knob k2"></div><div class="led"></div><div class="speaker"></div><div class="brandplate">NATAL</div></div>
   </div>
 </section>`));
-slidesEl.insertAdjacentHTML("beforeend", coverHTML(CLOSING, `
+function animWords(text, step){
+  let k = 0;
+  return text.split(/(\*[^*]+\*)/).filter(Boolean).map(part => {
+    const kw = part.startsWith("*");
+    const html = part.replace(/\*/g, "").split(/(\s+)/).map(w => /^\s+$/.test(w) || !w ? w :
+      `<span class="fw" style="transition-delay:${(.6 + k++ * step).toFixed(2)}s">${w}</span>`).join("");
+    return kw ? `<span class="kw">${html}</span>` : html;
+  }).join("");
+}
+slidesEl.insertAdjacentHTML("beforeend", `<section class="slide cover closing" data-v="0">
+  <div class="fin fin0"><div class="kicker">${CLOSING.kicker}</div><h1>${CLOSING.title}</h1><div class="rule"></div><p>${CLOSING.sub}</p></div>
+  <div class="fin fin1"><div class="kicker fade">O Natal de Francesco</div><div class="rule fade"></div><p class="fin-text">${animWords(FINAL1, .14)}</p></div>
+  <div class="fin fin2"><p class="fin-quote">${animWords(FINAL2, .2)}</p><div class="fin-sign fade" style="transition-delay:5.4s">Dr. Celso Charuri<span>Circular de 06/11/1981</span></div></div>
   <div class="countdown" id="countdown">
     <div class="ring"><svg viewBox="0 0 130 130"><circle class="track" cx="65" cy="65" r="60"/><circle class="bar" id="cd-bar" cx="65" cy="65" r="60"/></svg><div class="num" id="cd-num">20</div></div>
     <div class="lbl">Recomeçando<br>em instantes</div>
-  </div>`));
+  </div>
+</section>`);
 
 const slides = [...document.querySelectorAll(".slide")];
 const labels = ["Início", ...ADS.map(a => a.year), "Fim"];
@@ -251,11 +294,12 @@ labels.forEach((l, i) => {
 // Modo automático: depois do primeiro play, cada comercial puxa o próximo;
 // no encerramento, 20 s de contagem e o ciclo recomeça do primeiro comercial.
 const FIRST_AD = 1, LAST = slides.length - 1;
-const COUNTDOWN_S = 20, START_DELAY_MS = 1200;
+const START_DELAY_MS = 1200;
 // Pausa "Para pensar" em tela cheia depois de cada comercial
 const THINK_S = 10;
 const reflectEl = document.getElementById("reflect");
-let cur = 0, auto = false, timer = null, tick = null;
+let cur = 0, auto = false, timer = null, tick = null, final = 0;
+const closingEl = () => slides[LAST];
 
 function clearTimers(){ clearTimeout(timer); clearInterval(tick); timer = tick = null; }
 function stopAll(){
@@ -276,14 +320,21 @@ function go(i){
   slides[cur].classList.add("on");
   [...tl.children].forEach((b, k) => { b.classList.toggle("cur", k === cur); b.classList.toggle("seen", k < cur); });
   try { history.replaceState(null, "", "#" + cur); } catch(e) {}
+  if (cur === LAST) showFinal();
   if (!auto) return;
   const s = slides[cur].querySelector(".screen");
   if (s) timer = setTimeout(() => play(s), START_DELAY_MS);
   else if (cur === LAST) countdown();
   else timer = setTimeout(() => go(FIRST_AD), START_DELAY_MS);
 }
+function showFinal(){
+  const c = closingEl(); c.dataset.v = final;
+  const f = c.querySelector(".fin" + final);
+  f.classList.remove("show"); f.getBoundingClientRect(); f.classList.add("show");
+}
 function countdown(){
-  let left = COUNTDOWN_S;
+  const total = FINAL_S[final];
+  let left = total;
   const box = document.getElementById("countdown"), num = document.getElementById("cd-num"), bar = document.getElementById("cd-bar");
   num.textContent = left; bar.style.transition = "none"; bar.style.strokeDashoffset = 0;
   box.classList.add("on");
@@ -291,7 +342,7 @@ function countdown(){
   tick = setInterval(() => {
     left--;
     num.textContent = Math.max(left, 0);
-    bar.style.strokeDashoffset = 377 * (1 - left / COUNTDOWN_S);
+    bar.style.strokeDashoffset = 377 * (1 - left / total);
     if (left <= 0) go(FIRST_AD);
   }, 1000);
 }
@@ -335,7 +386,7 @@ document.querySelectorAll(".screen").forEach(s => {
   });
 });
 reflectEl.addEventListener("click", () => go(cur + 1));
-document.getElementById("start").addEventListener("click", () => { startAuto(); go(FIRST_AD); });
+document.querySelectorAll(".start").forEach(b => b.addEventListener("click", () => { final = +b.dataset.final; startAuto(); go(FIRST_AD); }));
 // Volta a tela de navegador a ficar acordada se ela sair e voltar ao foco
 document.addEventListener("visibilitychange", () => { if (auto && !document.hidden) navigator.wakeLock?.request("screen").catch(() => {}); });
 document.addEventListener("keydown", e => {
